@@ -1,4 +1,4 @@
-package encriptor
+package main
 
 import (
 	"crypto/aes"
