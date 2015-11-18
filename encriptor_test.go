@@ -4,17 +4,17 @@ import (
 	"testing"
 )
 
-func TestEncript(t *testing.T) {
+func TestEncriptByte(t *testing.T) {
 	inputByte := []byte("This text should be encripted because its full of secret information!")
 
 	invalidTestKey := []byte("this key is too small")
-	_, err := encrypt(invalidTestKey, inputByte)
+	_, err := encryptByte(invalidTestKey, inputByte)
 	if err == nil {
 		t.Error("encrypt with a key not of 32 bit size should have returned an error")
 	}
 
 	validTestKey := []byte("a 32 bit keyyyyyyyyyyyyyyyyyyyyy")
-	encriptedByte, err := encrypt(validTestKey, inputByte)
+	encriptedByte, err := encryptByte(validTestKey, inputByte)
 	if err != nil {
 		t.Error("encrypt failed with error: ", err)
 	}
@@ -23,19 +23,19 @@ func TestEncript(t *testing.T) {
 	}
 }
 
-func TestDecript(t *testing.T) {
+func TestDecriptByte(t *testing.T) {
 	inputByte := []byte("This text should be encripted because its full of secret information!")
 
 	invalidTestKey := []byte("this key is too small")
-	_, err := decrypt(invalidTestKey, inputByte)
+	_, err := decryptByte(invalidTestKey, inputByte)
 	if err == nil {
 		t.Error("encrypt with a key not of 32 bit size should have returned an error")
 	}
 
 	validTestKey := []byte("a 32 bit keyyyyyyyyyyyyyyyyyyyyy")
 	testString := "hello, is it me your looking for?"
-	encriptedByte, _ := encrypt(validTestKey, []byte(testString))
-	decriptedByte, err := decrypt(validTestKey, encriptedByte)
+	encriptedByte, _ := encryptByte(validTestKey, []byte(testString))
+	decriptedByte, err := decryptByte(validTestKey, encriptedByte)
 	if err != nil {
 		t.Error("decrypt failed with error: ", err)
 	}

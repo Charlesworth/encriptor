@@ -38,26 +38,32 @@ func main() {
 	key := []byte(keyString) // 32 bytes
 	// plaintext := []byte("test text to be ciphered and deciphered")
 	if encript {
-		plaintext := fileToByte(filename)
-		fmt.Printf("%s\n", plaintext)
-		ciphertext, err := encrypt(key, plaintext)
+		inputByte := fileToByte(filename)
+		ciphertext, err := encryptByte(key, inputByte)
 		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Printf("%0x\n", ciphertext)
 		byteToFile(ciphertext, filename+".enc")
 	} else {
-		ciphertext := fileToByte(filename)
-		result, err := decrypt(key, ciphertext)
+		encryptedByte := fileToByte(filename)
+		decryptedByte, err := decryptByte(key, encryptedByte)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("%s\n", result)
-		byteToFile(result, "hi")
+		byteToFile(decryptedByte, "hi")
 	}
 }
 
-func encrypt(key, text []byte) ([]byte, error) {
+func encriptFile(inputFileName string, key string, outputFileName string) error {
+	return errors.New("error!!!!!")
+}
+
+func decriptFile(fileName string, key string, outputFileName string) error {
+	return errors.New("error!!!!!")
+}
+
+func encryptByte(key, text []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -73,7 +79,7 @@ func encrypt(key, text []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
-func decrypt(key, text []byte) ([]byte, error) {
+func decryptByte(key, text []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
