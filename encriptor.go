@@ -6,7 +6,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
-	"fmt"
+	"flag"
 	"io"
 	"io/ioutil"
 	"log"
@@ -34,33 +34,52 @@ func argInit() {
 }
 
 func main() {
-	argInit()
-	key := []byte(keyString) // 32 bytes
-	// plaintext := []byte("test text to be ciphered and deciphered")
+	//argInit()
+
+	//encrypt := flag.String("encrypt", "", "encrypt or decrypt")
+	inputFile := flag.String("inputFile", "", "file to be acted upon")
+	key := flag.String("key", "", "crypto key (must be 32 bytes long)")
+	outputFile := flag.String("outputFile", "", "file to be output")
+	flag.Parse()
+
 	if encript {
-		inputByte := fileToByte(filename)
-		ciphertext, err := encryptByte(key, inputByte)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("%0x\n", ciphertext)
-		byteToFile(ciphertext, filename+".enc")
+		//encriptFile(filename, keyString, "testencrypt")
+		encriptFile(*inputFile, *key, *outputFile)
 	} else {
-		encryptedByte := fileToByte(filename)
-		decryptedByte, err := decryptByte(key, encryptedByte)
-		if err != nil {
-			log.Fatal(err)
-		}
-		byteToFile(decryptedByte, "hi")
+		decriptFile(*inputFile, *key, *outputFile)
 	}
 }
 
 func encriptFile(inputFileName string, key string, outputFileName string) error {
-	return errors.New("error!!!!!")
+	inputByte, err := fileToByte(inputFileName)
+	if err != nil {
+		return err
+	}
+
+	keyByte := []byte(key)
+	encryptedByte, err := encryptByte(keyByte, inputByte)
+	if err != nil {
+		return err
+	}
+
+	err = byteToFile(encryptedByte, outputFileName)
+	return err
 }
 
 func decriptFile(fileName string, key string, outputFileName string) error {
-	return errors.New("error!!!!!")
+	encryptedByte, err := fileToByte(fileName)
+	if err != nil {
+		return err
+	}
+
+	keyByte := []byte(key)
+	decryptedByte, err := decryptByte(keyByte, encryptedByte)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = byteToFile(decryptedByte, outputFileName)
+	return err
 }
 
 func encryptByte(key, text []byte) ([]byte, error) {
@@ -98,17 +117,12 @@ func decryptByte(key, text []byte) ([]byte, error) {
 	return data, nil
 }
 
-func fileToByte(file string) []byte {
-	dat, err := ioutil.ReadFile(file)
-	if err != nil {
-		log.Fatal("unable to open file ", file, " with error: ", err)
-	}
-	return dat
+func fileToByte(file string) ([]byte, error) {
+	data, err := ioutil.ReadFile(file)
+	return data, err
 }
 
-func byteToFile(b []byte, file string) {
+func byteToFile(b []byte, file string) error {
 	err := ioutil.WriteFile(file, b, 0644)
-	if err != nil {
-		log.Fatal("unable to save file ", file, " with error: ", err)
-	}
+	return err
 }
